@@ -46,11 +46,11 @@
       <thead>
         <tr>
           <th>Description</th>
-          <th>Enpoint</th>
           <th>Method</th>
+          <th>Enpoint</th>
           <th>Parameter</th>
-          <th>Request</th>
-          <th>Response</th>
+          <th>Request Body</th>
+          <th>Response Body</th>
 
         </tr>
       </thead>
@@ -59,8 +59,8 @@
         <!--Get all movies-->
         <tr>
           <td>Gets a list of all movies</td>
-          <td>/movies</td>
           <td>GET</td>
+          <td>/movies</td>
           <td>None</td>
           <td>None</td>
           <td>Returns a JSON array of all movies</td>
@@ -68,82 +68,92 @@
 
         <!--Get data of a specific title-->
         <tr>
-          <td>Gets information on specific title</td>
-          <td>/movies/:title</td>
+          <td>Gets information on specific movie</td>
           <td>GET</td>
+          <td>/movies/:title</td>
           <td>Movie name</td>
           <td>None</td>
-          <td>Returns a JSON object of information for specified title</td>
+          <td>Returns a JSON object of information for specified movie</td>
         </tr>
 
         <!--Get data about a genre-->
         <tr>
           <td>Gets a list of all movies in specified genre</td>
-          <td>/genre/:type</td>
           <td>GET</td>
-          <td>Genre</td>
+          <td>/movies/genre/:genreName</td>
+          <td>Genre name</td>
           <td>None</td>
-          <td>Returns a JSON array of movies by genre</td>
+          <td>Returns a JSON object of information on the genre</td>
         </tr>
 
         <!--Get data about a director-->
         <tr>
           <td>Gets information on specified director</td>
-          <td>/director/:name</td>
           <td>GET</td>
+          <td>/movies/directors/:directorName</td>
           <td>Director's name</td>
           <td>None</td>
-          <td>Returns a JSON array of information for specified director</td>
+          <td>Returns a JSON object of information for specified director</td>
         </tr>
 
         <!--Create new user-->
         <tr>
           <td>Creates a user profile</td>
-          <td>/users</td>
           <td>POST</td>
-          <td>Username</td>
-          <td>Provide a JSON object of user information</td>
-          <td>Returns a JSON object of user information</td>
+          <td>/users</td>
+          <td>none</td>
+          <td>
+            Provide a JSON object of user information:<br>
+            {<br>
+            &nbsp;&nbsp;"username": "Kim",<br>
+            &nbsp;&nbsp;"favoriteMovie": []<br>
+            }
+          </td>
+          <td>Returns a JSON object of the added user information</td>
         </tr>
 
         <!--Update user information-->
         <tr>
           <td>Updates a user's username</td>
-          <td>/user/:username</td>
           <td>PUT</td>
+          <td>/user/:id</td>
           <td>New username</td>
-          <td>None</td>
-          <td>Returns updated username</td>
+          <td> Provide updated JSON object of user information:<br>
+            {<br>
+            &nbsp;&nbsp;"username": "Kim updated Name",<br>
+            &nbsp;&nbsp;"favoriteMovie": []<br>
+            }</td>
+          <td>Returns updated JSON object of user's information</td>
         </tr>
 
         <!--Add movie to favorites-->
         <tr>
           <td>Adds a movie to the user's favorites</td>
-          <td>/user/:username/favorite/:title</td>
           <td>POST</td>
-          <td>Username, Movie name</td>
+          <td>/user/:id/:movieTitle</td>
+          <td>User ID, Movie name</td>
           <td>None</td>
-          <td>Returns a succesful message of the movie added to their favorite's</td>
+          <td>Returns a succesful message of the movie added to users favorite movies</td>
         </tr>
 
         <!--Deletes a movie from favorites-->
         <tr>
           <td>Deletes a movie from the user's favorites</td>
-          <td>/user/:username/favorite/:title</td>
           <td>DELETE</td>
-          <td>Movie name</td>
+          <td>/user/:id/:movieTitle</td>
+          <td>User ID, Movie name</td>
           <td>None</td>
-          <td>Returns a succesful message of the movie deleted from their favorite's</td>
+          <td>Returns a succesful message of the movie deleted from users favorite movies</td>
         </tr>
 
         <!--Deletes a movie from favorites-->
         <tr>
           <td>Deletes a user profile</td>
-          <td>/user/:username</td>
           <td>DELETE</td>
-          <td>Username</td>
+          <td>/user/:id</td>
+          <td>User's ID</td>
           <td>None</td>
-          <td>Returns a succesful message of profile deletion</td>
+          <td>Returns a succesful message of email been removed</td>
         </tr>
 
       </tbody>
