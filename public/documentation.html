@@ -5,15 +5,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documentation</title>
+  <style>
+    body {
+      margin: 25px;
+    }
+
+    table {
+      width: auto;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #000000;
+      padding: 10px;
+      text-align: left;
+    }
+  </style>
 </head>
 
 <body>
 
   <header>
-    <h1>My Flix API - Movie information and User management</h1>
+    <h1>My Flix API - Documentation</h1>
   </header>
 
   <main>
+
     <h2>Intro</h2>
     <p> The My Flix API is a RESTful web service that provides users access to a comprehensive database of movies,
       directors, and genres. This API was built using Node.js, Express, and MongoDB. It enables users to explore movie
@@ -21,6 +39,117 @@
       ensuring seamless interaction with movie-related data, user authentication, and profile management. It was
       designed as part of a full-stack MERN application. The My Flix API is the backend foundation for delivering a
       dynamic and engaging movie discovery experience.</p>
+
+    <h3> API Endpoints</h3>
+    <table>
+
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Enpoint</th>
+          <th>Method</th>
+          <th>Parameter</th>
+          <th>Request</th>
+          <th>Response</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+        <!--Get all movies-->
+        <tr>
+          <td>Gets a list of all movies</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>Returns a JSON array of all movies</td>
+        </tr>
+
+        <!--Get data of a specific title-->
+        <tr>
+          <td>Gets information on specific title</td>
+          <td>/movies/:title</td>
+          <td>GET</td>
+          <td>Movie name</td>
+          <td>None</td>
+          <td>Returns a JSON object of information for specified title</td>
+        </tr>
+
+        <!--Get data about a genre-->
+        <tr>
+          <td>Gets a list of all movies in specified genre</td>
+          <td>/genre/:type</td>
+          <td>GET</td>
+          <td>Genre</td>
+          <td>None</td>
+          <td>Returns a JSON array of movies by genre</td>
+        </tr>
+
+        <!--Get data about a director-->
+        <tr>
+          <td>Gets information on specified director</td>
+          <td>/director/:name</td>
+          <td>GET</td>
+          <td>Director's name</td>
+          <td>None</td>
+          <td>Returns a JSON array of information for specified director</td>
+        </tr>
+
+        <!--Create new user-->
+        <tr>
+          <td>Creates a user profile</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>Username</td>
+          <td>Provide a JSON object of user information</td>
+          <td>Returns a JSON object of user information</td>
+        </tr>
+
+        <!--Update user information-->
+        <tr>
+          <td>Updates a user's username</td>
+          <td>/user/:username</td>
+          <td>PUT</td>
+          <td>New username</td>
+          <td>None</td>
+          <td>Returns updated username</td>
+        </tr>
+
+        <!--Add movie to favorites-->
+        <tr>
+          <td>Adds a movie to the user's favorites</td>
+          <td>/user/:username/favorite/:title</td>
+          <td>POST</td>
+          <td>Username, Movie name</td>
+          <td>None</td>
+          <td>Returns a succesful message of the movie added to their favorite's</td>
+        </tr>
+
+        <!--Deletes a movie from favorites-->
+        <tr>
+          <td>Deletes a movie from the user's favorites</td>
+          <td>/user/:username/favorite/:title</td>
+          <td>DELETE</td>
+          <td>Movie name</td>
+          <td>None</td>
+          <td>Returns a succesful message of the movie deleted from their favorite's</td>
+        </tr>
+
+        <!--Deletes a movie from favorites-->
+        <tr>
+          <td>Deletes a user profile</td>
+          <td>/user/:username</td>
+          <td>DELETE</td>
+          <td>Username</td>
+          <td>None</td>
+          <td>Returns a succesful message of profile deletion</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
   </main>
 
   <footer>
