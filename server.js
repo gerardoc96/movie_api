@@ -3,63 +3,22 @@ const express = require("express"),
   fs = require('fs'),
   path = require('path'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid');
+  uuid = require('uuid'),
+  mongoose = require('mongoose'),
+  Models = require('./models.js');
 
-const app = express();
+const app = express(),
+  Movies = Models.Movie,
+  Users = Models.Users;
 
 app.use(bodyParser.json());
+
+mongoose.connect('mongodb://localhost:27017/MyFlix', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
-let users = [
-  {
-    id: 1,
-    username: "Kim",
-    favoriteMovie: []
-  },
-  {
-    id: 2,
-    username: "Joe",
-    favoriteMovie: ["The fountain"]
-  }
-]
 
-let movies = [
-  {
-    "Title": "The Fountain",
-    "Description": "Movie Description",
-    "Genre": {
-      "Type": "Drama",
-      "Description": "Description of genre"
-    },
-    "Director": {
-      "Name": "Darren Aronofsky",
-      "Bio": "Director's Bio",
-      "Birth": 1969
-    },
-    "ImageURL": "image url",
-    "Featured": false
-
-  },
-  {
-    "Title": "The Princess Bride",
-    "Description": "Movie Description",
-    "Genre": {
-      "Type": "Action",
-      "Description": "Description of genre"
-    },
-    "Director": {
-      "Name": "Rob Reiner",
-      "Bio": "Director's Bio",
-      "Birth": 1947
-    },
-    "ImageURL": "image url",
-    "Featured": false
-
-  },
-
-]
 
 // GET all movies
 app.get('/movies', (req, res) => {
