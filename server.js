@@ -1,19 +1,31 @@
 const express = require("express"),
-  morgan = require('morgan'),
   fs = require('fs'),
   path = require('path'),
   bodyParser = require('body-parser'),
-  uuid = require('uuid'),
-  mongoose = require('mongoose'),
-  Models = require('./models.js');
+  uuid = require('uuid');
 
-const app = express(),
-  Movies = Models.Movie,
-  Users = Models.Users;
+const morgan = require('morgan');
+const app = express();
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+
+const Movies = Models.Movie;
+const Users = Models.User;
 
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/MyFlix', { useNewUrlParser: true, useUnifiedTopology: true });
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/MyFlix');
+    console.log('Connected to MyFlix');
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    process.exit(1);
+  }
+};
+connectDB();
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
@@ -64,17 +76,29 @@ app.get('/movies/directors/:directorName', (req, res) => {
 
 // Create User
 app.post('/users', (req, res) => {
-  const newUser = req.body;
-
-  if (newUser.name) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser);
-  } else {
-    res.status(400).send("users need names")
-  }
-
-})
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exist');
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        })
+          .then((user) => { res.status(201).json(user) })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 // Update user's username
 app.put('/users/:id', (req, res) => {
