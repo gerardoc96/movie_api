@@ -69,33 +69,33 @@ app.get('/movies/:Title', asyncHandler(async (req, res, next) => {
   res.status(200).json(movies);
 }));
 
-// GET movies by genre
-app.get('/movies/genre/:Name', asyncHandler(async (req, res, next) => {
-  let movies = await Movies.find({ 'Genre.Name': req.params.Name });
+// GET information on a genre
+app.get('/movies/genre/:genreName', asyncHandler(async (req, res, next) => {
+  let genres = await Movies.findOne({ 'Genre.Name': req.params.genreName });
 
-  if (!movies) {
+  if (!genres) {
     res.status(404);
-    throw new Error('Movie not found.');
+    throw new Error('Genre not found.');
   }
 
-  res.status(200).json(movies);
+  res.status(200).json(genres.Genre);
 }));
 
 
 // GET directors information
-app.get('/movies/directors/:Name', asyncHandler(async (req, res, next) => {
-  let movies = await Movies.findOne({ 'Director.Name': req.params.Name });
+app.get('/movies/directors/:directorName', asyncHandler(async (req, res, next) => {
+  let directors = await Movies.findOne({ 'Director.Name': req.params.directorName });
 
-  if (!movies) {
+  if (!directors) {
     res.status(404);
     throw new Error('Director not found.');
   }
 
-  res.status(200).json(movies.Director);
+  res.status(200).json(directors.Director);
 }));
 
 
-// Create User
+// Create a new user
 app.post('/users', asyncHandler(async (req, res, next) => {
   let existingUser = await Users.findOne({ Username: req.body.Username });
 
@@ -148,11 +148,11 @@ app.post('/users/:Username/:MovieID', asyncHandler(async (req, res, next) => {
     throw new Error(`User "${req.params.Username}" not found`);
   }
 
-  res.status(200).json(updatedUser);
+  res.status(200).send(`${req.params.MovieID} has been added to ${req.params.Username}'s favorite list`);
 }));
 
 
-// Delets movie from user's favorite movies
+// Deletes movie from user's favorite movies
 app.delete('/users/:Username/:MovieID', asyncHandler(async (req, res, next) => {
   const updatedUserFav = await Users.findOneAndUpdate(
     { Username: req.params.Username },
