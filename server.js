@@ -39,6 +39,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ message: err.message || 'Sever Error' });
 });
 
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to MyFlix');
@@ -135,7 +136,7 @@ app.put('/users/:Username', asyncHandler(async (req, res, next) => {
 }));
 
 // Adds movie to user's favorite movies
-app.post('/users/:Username/movies/:MovieID', asyncHandler(async (req, res, next) => {
+app.post('/users/:Username/:MovieID', asyncHandler(async (req, res, next) => {
   const updatedUser = await Users.findOneAndUpdate(
     { Username: req.params.Username },
     { $addToSet: { FavoriteMovies: req.params.MovieID } },
@@ -152,34 +153,33 @@ app.post('/users/:Username/movies/:MovieID', asyncHandler(async (req, res, next)
 
 
 // Delets movie from user's favorite movies
-app.delete('/users/:id/:movieTitle', (req, res) => {
-  const { id, movieTitle } = req.params;
+app.delete('/users/:Username/:MovieID', asyncHandler(async (req, res, next) => {
+  const updatedUserFav = await Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    { $pull: { FavoriteMovies: req.params.MovieID } },
+    { new: true, runValidators: true }
+  );
 
-  let user = users.find(user => user.id == id);
-
-  if (user) {
-    user.favoriteMovie = user.favoriteMovie.filter(title => title !== movieTitle);
-    res.status(200).send(`${movieTitle} has been removed from user ${id}'s favorite list`);
-  } else {
-    res.status(400).send('no such user')
+  if (!updatedUserFav) {
+    res.status(404);
+    throw new Error(`User "${req.params.Username}" not found`);
   }
-})
 
-// Delets user's email
-app.delete('/users/:id', (req, res) => {
-  const { id } = req.params;
+  res.status(200).send(`${req.params.MovieID} has been removed from ${req.params.Username}'s favorite list`);
+}));
 
-  let user = users.find(user => user.id == id);
 
-  if (user) {
-    users = users.filter(user => user.id != id);
-    res.status(200).send(`user Email has been removed`);
-  } else {
-    res.status(400).send('no such user')
+// Delets a user by username
+app.delete('/users/:Username', asyncHandler(async (req, res, next) => {
+  const deletedUser = await Users.findOneAndDelete({ Username: req.params.Username });
+
+  if (!deletedUser) {
+    res.status(404);
+    throw new Error(`User "${req.params.Username}" not found`);
   }
-})
 
-app.use(express.static('public'));
+  res.status(200).send(`${req.params.Username} was deleted`);
+}));
 
 // Listen for request
 app.listen(8080, () => {
