@@ -1,0 +1,6 @@
+::1 - - [03/Mar/2025:01:37:57 +0000] "GET /movies/Interstellar HTTP/1.1" 200 2210 "-" "PostmanRuntime/7.43.0"
+::1 - - [03/Mar/2025:01:38:22 +0000] "GET /movies/Genre/Drama HTTP/1.1" 200 635 "-" "PostmanRuntime/7.43.0"
+::1 - - [03/Mar/2025:01:39:39 +0000] "GET /movies/Genre/Drama HTTP/1.1" 200 635 "-" "PostmanRuntime/7.43.0"
+::1 - - [03/Mar/2025:01:42:49 +0000] "POST /users/TestupodateUsername/67b3f9f4f46911af044d7941 HTTP/1.1" 200 78 "-" "PostmanRuntime/7.43.0"
+::1 - - [03/Mar/2025:01:43:18 +0000] "DELETE /users/TestupodateUsername/67b3f9f4f46911af044d7941 HTTP/1.1" 200 82 "-" "PostmanRuntime/7.43.0"
+::1 - - [03/Mar/2025:01:43:45 +0000] "DELETE /users/TestupodateUsername HTTP/1.1" 200 31 "-" "PostmanRuntime/7.43.0"
