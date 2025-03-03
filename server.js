@@ -16,6 +16,10 @@ const Users = Models.User;
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
+
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb://localhost:27017/MyFlix');
