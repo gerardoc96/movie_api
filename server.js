@@ -102,6 +102,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 
 // Create a new user
 app.post('/users', asyncHandler(async (req, res, next) => {
+  let hashPassword = Users.hashPassword(req.body.Password);
   let existingUser = await Users.findOne({ Username: req.body.Username });
 
   if (existingUser) {
@@ -111,7 +112,7 @@ app.post('/users', asyncHandler(async (req, res, next) => {
 
   let newUser = await Users.create({
     Username: req.body.Username,
-    Password: req.body.Password,
+    Password: hashPassword,
     Email: req.body.Email,
     Birthday: req.body.Birthday
   });
@@ -121,7 +122,7 @@ app.post('/users', asyncHandler(async (req, res, next) => {
 
 // Update user's info
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), asyncHandler(async (req, res, next) => {
-
+  let hashPassword = Users.hashPassword(req.body.Password);
   if (req.user.Username !== req.params.Username) {
     return res.status(400).send('Permission denied');
   }
@@ -129,7 +130,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), as
     {
       $set: {
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
       }
