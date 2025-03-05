@@ -8,11 +8,12 @@ const morgan = require('morgan');
 const app = express();
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-
+const cors = require('cors');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
