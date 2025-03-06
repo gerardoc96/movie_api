@@ -32,6 +32,8 @@ const connectDB = async () => {
 };
 connectDB();
 
+const { check, validationResult } = require('express-validator');
+
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
@@ -101,49 +103,76 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 
 
 // Create a new user
-app.post('/users', asyncHandler(async (req, res, next) => {
-  let hashPassword = Users.hashPassword(req.body.Password);
-  let existingUser = await Users.findOne({ Username: req.body.Username });
+app.post('/users',
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+  asyncHandler(async (req, res, next) => {
 
-  if (existingUser) {
-    res.status(404);
-    throw new Error(`${req.body.Username} already exists`);
-  }
+    let errors = validationResult(req);
 
-  let newUser = await Users.create({
-    Username: req.body.Username,
-    Password: hashPassword,
-    Email: req.body.Email,
-    Birthday: req.body.Birthday
-  });
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-  res.status(201).json(newUser);
-}));
+    let hashPassword = Users.hashPassword(req.body.Password);
+    let existingUser = await Users.findOne({ Username: req.body.Username });
+
+    if (existingUser) {
+      res.status(404);
+      throw new Error(`${req.body.Username} already exists`);
+    }
+
+    let newUser = await Users.create({
+      Username: req.body.Username,
+      Password: hashPassword,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+    });
+
+    res.status(201).json(newUser);
+  }));
 
 // Update user's info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), asyncHandler(async (req, res, next) => {
-  let hashPassword = Users.hashPassword(req.body.Password);
-  if (req.user.Username !== req.params.Username) {
-    return res.status(400).send('Permission denied');
-  }
-  let updatedUser = await Users.findOneAndUpdate({ Username: req.params.Username },
-    {
-      $set: {
-        Username: req.body.Username,
-        Password: hashPassword,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-      }
-    },
-    { new: true })
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }),
+  [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+  asyncHandler(async (req, res, next) => {
+    let errors = validationResult(req);
 
-  if (!updatedUser) {
-    res.status(404);
-    throw new Error(`User ${req.params.Username} does not exists`);
-  }
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-  res.status(200).json(updatedUser);
-}));
+    let hashPassword = Users.hashPassword(req.body.Password);
+    if (req.user.Username !== req.params.Username) {
+      return res.status(400).send('Permission denied');
+    }
+    let updatedUser = await Users.findOneAndUpdate({ Username: req.params.Username },
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: hashPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        }
+      },
+      { new: true })
+
+    if (!updatedUser) {
+      res.status(404);
+      throw new Error(`User ${req.params.Username} does not exists`);
+    }
+
+    res.status(200).json(updatedUser);
+  }));
 
 // Adds movie to user's favorite movies
 app.post('/users/:Username/:MovieID', passport.authenticate('jwt', { session: false }), asyncHandler(async (req, res, next) => {
