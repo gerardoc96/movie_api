@@ -23,7 +23,7 @@ require('./passport');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/MyFlix');
+    await mongoose.connect(process.env.CONNECTION_URI);
     console.log('Connected to MyFlix');
   } catch (error) {
     console.error('Database connection failed:', error);
