@@ -78,7 +78,7 @@
 
         <!--Get data about a genre-->
         <tr>
-          <td>Gets a list of all movies in specified genre</td>
+          <td>Gets information on specified genre</td>
           <td>GET</td>
           <td>/movies/genre/:genreName</td>
           <td>Genre name</td>
@@ -122,7 +122,10 @@
           <td>Username</td>
           <td> Provide a JSON object containig the key for information you wish to update and its new value:<br>
             {<br>
-            &nbsp;&nbsp;"Username": "updatedUsername",<br>
+            &nbsp;&nbsp;"Username": "UpdatedName",<br>
+            &nbsp;&nbsp;"Password": "UpdatedPassword",<br>
+            &nbsp;&nbsp;"Email": "UpdatedEmail",<br>
+            &nbsp;&nbsp;"Birthday": "05/04/1996",<br>
             }
           </td>
           <td>Returns satus code 200 and updated JSON object of user's information</td>
