@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
 })
 
 // GET all movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), asyncHandler(async (req, res, next) => {
+app.get('/movies', asyncHandler(async (req, res, next) => {
   let movies = await Movies.find();
 
   if (!movies.length) {
