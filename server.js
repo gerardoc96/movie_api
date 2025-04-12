@@ -101,6 +101,23 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
   res.status(200).json(directors.Director);
 }));
 
+// GET user by username
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), asyncHandler(async (req, res, next) => {
+  if (req.user.Username !== req.params.Username) {
+    res.status(403);
+    throw new Error('Permission denied');
+  }
+
+  const user = await Users.findOne({ Username: req.params.Username }).select('-Password');
+
+  if (!user) {
+    res.status(404);
+    throw new Error(`User "${req.params.Username}" not found`);
+  }
+
+  res.status(200).json(user);
+}));
+
 
 // Create a new user
 app.post('/users',
@@ -122,7 +139,7 @@ app.post('/users',
     let existingUser = await Users.findOne({ Username: req.body.Username });
 
     if (existingUser) {
-      res.status(404);
+      res.status(409);
       throw new Error(`${req.body.Username} already exists`);
     }
 
