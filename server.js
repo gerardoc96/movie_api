@@ -208,7 +208,7 @@ app.post('/users/:Username/:MovieID', passport.authenticate('jwt', { session: fa
     throw new Error(`User "${req.params.Username}" not found`);
   }
 
-  res.status(200).send(`${req.params.MovieID} has been added to ${req.params.Username}'s favorite list`);
+  res.status(200).json(updatedUser);
 }));
 
 
@@ -229,7 +229,7 @@ app.delete('/users/:Username/:MovieID', passport.authenticate('jwt', { session: 
     throw new Error(`User "${req.params.Username}" not found`);
   }
 
-  res.status(200).send(`${req.params.MovieID} has been removed from ${req.params.Username}'s favorite list`);
+  res.status(200).json(updatedUserFav);
 }));
 
 
